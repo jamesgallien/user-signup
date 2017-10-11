@@ -15,32 +15,30 @@ def verify():
     verify_password = request.form['verify_password']
     email = request.form['email']
 
-    username_and_email_url_string = "&username=" + username + "&email=" + email
-
     if not username:
         error = "Please enter a value"
-        return redirect("/?username_error=" + error + username_and_email_url_string)
+        return render_template("signup.html", username_error=error, username=username, email=email)
 
     if not password:
         error = "Please enter a value"
-        return redirect("/?password_error=" + error + username_and_email_url_string)
+        return render_template("signup.html", password_error=error, username=username, email=email)
 
     if (" " in password) or (len(password) < 3) or (len(password) > 20):
         error = "Invalid password"
-        return redirect("/?password_error=" + error + username_and_email_url_string)
+        return render_template("signup.html", password_error=error, username=username, email=email)
 
     if not verify_password:
-        error = "Please enter a value"
-        return redirect("/?v_password_error=" + error + username_and_email_url_string)
+        error = "'Password' and 'Verify Password' are required fields"
+        return render_template("signup.html", password_error=error, p_verify_error=error, username=username, email=email)
     
     if password != verify_password:
-        error = "Passwords don't match"
-        return redirect("/?v_password_error=" + error + username_and_email_url_string)    
+        error = "Passwords must match"
+        return render_template("signup.html", password_error=error, p_verify_error=error, username=username, email=email)    
 
     if (len(email) != 0):
         if (" " in email) or (len(email) < 3) or (len(email) > 20) or ("@" not in email) or ("." not in email):
             error = "Invalid email address"
-            return redirect("/?email_error=" + error + username_and_email_url_string)
+            return render_template("signup.html", email_error=error, username=username, email=email)
 
     name = request.form['username']
     return render_template('welcome.html', name=name)
